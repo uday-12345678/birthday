@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday 💗</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+*{box-sizing:border-box}
+body{ margin:0; font-family:'Poppins',sans-serif; background:linear-gradient(180deg,#fff6fb,#ffeef6); color:#333 }
+
+.wrap{ max-width:820px; margin:28px auto; padding:22px; text-align:center; }
+.title{ font-size:34px; color:#ff2f80; font-weight:700; margin:8px 0 6px 0; letter-spacing:0.6px; }
+.subtitle{ color:#6b6b6b; margin-bottom:18px }
+
+.card{ background:linear-gradient(180deg,#fff,#fff9fb); border-radius:18px; padding:18px; box-shadow:0 18px 50px rgba(255,80,150,0.08); display:flex; gap:20px; align-items:center; justify-content:center; flex-wrap:wrap }
+
+.photo{ width:280px; max-width:88%; border-radius:16px; box-shadow:0 14px 35px rgba(255,93,160,0.18); }
+.msg{ max-width:420px; text-align:left; font-size:16px; line-height:1.6; color:#444 }
+
+.cake{ width:120px; height:120px; }
+
+.actions{ margin-top:18px; display:flex; gap:10px; justify-content:center }
+.btn{ background:#ff4f9a; color:#fff; border:none; padding:10px 14px; border-radius:12px; cursor:pointer; box-shadow:0 8px 20px rgba(255,80,150,0.12) }
+.btn.alt{ background:#fff; color:#ff4f9a; border:1px solid #ffd4e6 }
+
+.hearts{ position:fixed; left:0; top:0; width:100%; height:100%; pointer-events:none; overflow:hidden }
+.heart{ position:absolute; width:26px; height:26px; background:linear-gradient(180deg,#ff7aa8,#ff4f9a); transform:rotate(45deg); border-radius:4px 4px 0 0; opacity:0.9 }
+.heart:before,.heart:after{ content:''; position:absolute; width:26px; height:26px; background:inherit; border-radius:50%; }
+.heart:before{ top:-13px; left:0 }
+.heart:after{ left:13px; top:0 }
+
+canvas#confetti{ position:fixed; left:0; top:0; width:100%; height:100%; pointer-events:none }
+
+@keyframes popIn{ 0%{ transform:scale(.8); opacity:0 } 60%{ transform:scale(1.05); opacity:1 } 100%{ transform:scale(1); opacity:1 } }
+.title{ animation: popIn .7s ease both }
+
+</style>
+
+</head>
+
+<body>
+
+<canvas id="confetti"></canvas>
+<div class="hearts" id="hearts"></div>
+
+<div class="wrap">
+    <div class="title" id="title">Happy Birthday</div>
+    <div class="subtitle" id="sub"></div>
+
+    <div class="card">
+        <img id="photo" class="photo" src="herpic.jpg" alt="Birthday Girl" onerror="this.style.display='none'">
+
+        <div class="msg">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+                <svg class="cake" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g fill="none" fill-rule="evenodd"><rect width="64" height="64" rx="12" fill="#ffedf4"/>
+                        <g transform="translate(12 18)">
+                            <rect width="40" height="18" rx="4" fill="#fff" stroke="#ffd6ea"/>
+                            <rect x="4" y="-6" width="32" height="6" rx="3" fill="#ffd6ea"/>
+                            <g transform="translate(10 -10)">
+                                <path d="M4 20c.5-3 3-4 3-6s-1.5-3-3-3-3 1-3 3 2.5 3 3 6z" fill="#ff6fa6"/>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+                <div>
+                    <div style="font-weight:600;color:#ff2f80;font-size:18px" id="greetingLine">Wishing you a beautiful day</div>
+                    <div style="font-size:13px;color:#888" id="dobLine"></div>
+                </div>
+            </div>
+
+            <p id="msg">Loading...</p>
+
+            <div class="actions">
+                <button class="btn" id="replay">Celebrate Again 🎉</button>
+                <button class="btn alt" id="edit">Edit Details</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Simple confetti implementation
+const canvas = document.getElementById('confetti');
+const ctx = canvas.getContext('2d');
+let W = canvas.width = window.innerWidth;
+let H = canvas.height = window.innerHeight;
+window.addEventListener('resize', ()=>{ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; });
+
+function rand(min,max){return Math.random()*(max-min)+min}
+class Particle{ constructor(){ this.reset() }
+    reset(){ this.x = rand(0,W); this.y = rand(-H,0); this.w=rand(6,12); this.h=rand(8,18); this.vx=rand(-0.5,0.5); this.vy=rand(1,4); this.rot=rand(0,360); this.size=rand(.6,1.4); this.col=['#FF6FA6','#FFD1EA','#FFBCD9','#FF89C4'][~~rand(0,4)]; }
+    update(){ this.x += this.vx; this.y += this.vy; this.rot += 3; if(this.y>H+20) this.reset() }
+    draw(){ ctx.save(); ctx.translate(this.x,this.y); ctx.rotate(this.rot*Math.PI/180); ctx.fillStyle=this.col; ctx.fillRect(-this.w/2,-this.h/2,this.w,this.h); ctx.restore() }
+}
+const parts = Array.from({length:80}, ()=> new Particle());
+function loop(){ ctx.clearRect(0,0,W,H); parts.forEach(p=>{ p.update(); p.draw() }); requestAnimationFrame(loop) }
+
+// hearts float
+function spawnHearts(){ const hearts = document.getElementById('hearts'); for(let i=0;i<14;i++){ const el = document.createElement('div'); el.className='heart'; el.style.left = (Math.random()*100)+'%'; el.style.top = (70+Math.random()*30)+'%'; el.style.opacity = (0.6+Math.random()*0.4); el.style.transform = 'rotate('+ (Math.random()*40-20)+'deg)'; el.style.width = (12+Math.random()*26)+'px'; el.style.height = el.style.width; hearts.appendChild(el); const dur = 5000+Math.random()*6000; el.animate([{transform:'translateY(0) scale(1)'},{transform:'translateY(-120vh) scale(.6)'}],{duration:dur, easing:'linear'}); setTimeout(()=> el.remove(), dur); }
+}
+
+// handle personalization
+const name = localStorage.getItem('girlName');
+const dob = localStorage.getItem('girlDOB');
+if(!name || !dob){ // fallback
+    setTimeout(()=> location.href='page1.html', 900);
+    document.getElementById('title').textContent = 'No details found — redirecting...';
+} else {
+    document.getElementById('title').textContent = `🎀 Happy Birthday ${name} 🎀`;
+    document.getElementById('sub').textContent = `Celebrating ${name}`;
+    const dd = new Date(dob);
+    document.getElementById('dobLine').textContent = dd.toDateString();
+    document.getElementById('msg').innerHTML = `${name}, today is all about you and the beautiful soul you are. Your journey ahead will sparkle with success, love, and joy. Keep shining — the world adores you! 💗✨`;
+
+    // start confetti and hearts
+    loop(); spawnHearts();
+    // repeat hearts occasionally
+    setInterval(spawnHearts, 2800);
+}
+
+document.getElementById('replay').addEventListener('click', ()=>{ parts.forEach(p=> p.reset()); spawnHearts(); });
+document.getElementById('edit').addEventListener('click', ()=>{ location.href='page1.html' });
+
+</script>
+
+</body>
+</html>

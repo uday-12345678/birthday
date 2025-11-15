@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Someone Special 💗</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+:root{
+  --pink-1: #ffefef;
+  --pink-2: #ffd6e6;
+  --accent: #ff4f9a;
+}
+
+*{box-sizing:border-box}
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(1200px 600px at 10% 10%, #fff0f7, transparent 10%),
+                linear-gradient(135deg, #fff, var(--pink-1));
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stage {
+    width: 94%;
+    max-width: 520px;
+    padding: 28px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,250,255,0.9));
+    border-radius: 22px;
+    box-shadow: 0 12px 40px rgba(255,79,154,0.12);
+    position: relative;
+    overflow: hidden;
+}
+
+.logo {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 22px;
+    margin: 0 0 8px 0;
+}
+
+.lead { color:#555; margin:0 0 18px 0; }
+
+.form {
+    display:grid;
+    gap:12px;
+}
+
+.field {
+    display:flex;
+    gap:8px;
+}
+
+input[type="text"], input[type="date"]{
+    flex:1;
+    padding:12px 14px;
+    border-radius:12px;
+    border:1px solid #ffd6e8;
+    background: linear-gradient(180deg,#fff,#fffafc);
+    font-size:15px;
+    outline:none;
+}
+
+.btn {
+    margin-top:6px;
+    display:inline-block;
+    background: linear-gradient(90deg,var(--accent),#ff2f80);
+    color:white;
+    padding:12px 18px;
+    border-radius:14px;
+    border:none;
+    cursor:pointer;
+    font-size:16px;
+    box-shadow:0 8px 20px rgba(255,80,150,0.18);
+    transform-origin:center;
+}
+.btn:active{transform:scale(.99)}
+
+.small { font-size:13px; color:#888; }
+
+.balloons {
+  position:absolute; left:-40px; top:-40px; right:-40px; bottom:-40px; pointer-events:none;
+}
+.balloon{ position:absolute; width:40px; height:60px; border-radius:50% 50% 50% 50%; transform-origin:center bottom;}
+
+@keyframes floatUp{ 0%{ transform:translateY(40vh) rotate(-10deg);} 100%{ transform:translateY(-30vh) rotate(10deg);} }
+
+.balloon.a{ left:6%; background:linear-gradient(180deg,#ffd1ea,#ff9fcf); animation: floatUp 8s linear infinite; animation-delay:0s }
+.balloon.b{ left:24%; background:linear-gradient(180deg,#ffe9f6,#ffb0d1); animation: floatUp 9s linear infinite; animation-delay:-2s }
+.balloon.c{ left:78%; background:linear-gradient(180deg,#ffcef3,#ffa1d1); animation: floatUp 10s linear infinite; animation-delay:-4s }
+.balloon.d{ left:48%; background:linear-gradient(180deg,#fff1f8,#ffb6dd); animation: floatUp 7s linear infinite; animation-delay:-1s }
+
+.footer-note{ text-align:center; margin-top:14px; color:#777; font-size:13px }
+
+/* subtle floating hearts for the CTA */
+.cta-heart{ position:absolute; right:18px; bottom:18px; width:42px; height:42px; opacity:.12; background:radial-gradient(circle at 30% 30%, #fff9, transparent 40%), linear-gradient(180deg,#ff7aa8,#ff4f9a); border-radius:8px; transform:rotate(20deg); }
+
+</style>
+</head>
+
+<body>
+
+<div class="stage">
+    <div class="logo">✨ For Someone Special ✨</div>
+    <p class="lead">Make this day unforgettable — add your name and birthday below.</p>
+
+    <div class="form">
+        <input id="name" type="text" placeholder="Her name (e.g. Divya)">
+        <input id="dob" type="date" title="Birthdate">
+        <button class="btn" id="goBtn">Get Ready To Celebrate 🎉</button>
+    </div>
+
+    <p class="footer-note">Tip: Add a picture named <code>herpic.jpg</code> to this folder to show on the next page.</p>
+
+    <div class="balloons" aria-hidden="true">
+        <div class="balloon a"></div>
+        <div class="balloon b"></div>
+        <div class="balloon c"></div>
+        <div class="balloon d"></div>
+    </div>
+
+    <div class="cta-heart"></div>
+
+</div>
+
+<script>
+(function(){
+    const nameEl = document.getElementById('name');
+    const dobEl = document.getElementById('dob');
+    const btn = document.getElementById('goBtn');
+
+    // restore if available
+    const storedName = localStorage.getItem('girlName');
+    const storedDOB = localStorage.getItem('girlDOB');
+    if(storedName) nameEl.value = storedName;
+    if(storedDOB) dobEl.value = storedDOB;
+
+    btn.addEventListener('click', ()=>{
+        const name = nameEl.value.trim();
+        const dob = dobEl.value;
+        if(!name || !dob){
+            alert('Please fill both fields 💗');
+            return;
+        }
+        localStorage.setItem('girlName', name);
+        localStorage.setItem('girlDOB', dob);
+        // small animation
+        btn.disabled = true;
+        btn.style.transform = 'scale(.98)';
+        setTimeout(()=> location.href = 'page2.html', 450);
+    });
+})();
+</script>
+
+</body>
+</html>
